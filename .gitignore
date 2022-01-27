@@ -1,0 +1,11 @@
+__pycache__/
+
+check_*.py
+loader-v2.py
+cmd
+
+log/
+nbhd/
+results/
+
+
