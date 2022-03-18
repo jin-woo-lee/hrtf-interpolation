@@ -16,18 +16,18 @@ python3 dataset/preprocess.py
 Reconstruction test for HUTUBS. This will reproduce the results of Table 2. Note that Table 2 of the paper shows the RMSE averaged for five test folds.
 
 ```bash
-python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100                  --test_fold 3  # Table 2, 'All'
-python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --x_constraint 0 --test_fold 3  # Table 2, 'Fro'
-python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --y_constraint 0 --test_fold 3  # Table 2, 'Med'
-python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --z_constraint 0 --test_fold 3  # Table 2, 'Hor'
+python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --step 1485                  --test_fold 3  # Table 2, 'All'
+python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --step 1485 --x_constraint 0 --test_fold 3  # Table 2, 'Fro'
+python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --step 1485 --y_constraint 0 --test_fold 3  # Table 2, 'Med'
+python3 interp-hutubs.py --gpu 0 --in_ch 16 --p_range 0.2 --epoch 100 --step 1485 --z_constraint 0 --test_fold 3  # Table 2, 'Hor'
 ```
 
 Interpolation test for FABIAN. This will reproduce the results of Table 3. Note that Table 3 of the paper shows the RMSE averaged for five test folds.
 
 ```bash
-python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100                  --test_fold 5  # Table 3, Ours, 'All'
-python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100 --y_constraint 0 --test_fold 5  # Table 3, Ours, 'Med'
-python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100 --scale_factor 6 --test_fold 5  # Table 3, Ours (x1/6), 'All'
+python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100 --step 1485                  --test_fold 5  # Table 3, Ours, 'All'
+python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100 --step 1485 --y_constraint 0 --test_fold 5  # Table 3, Ours, 'Med'
+python3 interp-fabian.py --gpu 0 --in_ch 16 --p_range 0.6 --epoch 100 --step 1485 --scale_factor 6 --test_fold 5  # Table 3, Ours (x1/6), 'All'
 ```
 
 ### Train

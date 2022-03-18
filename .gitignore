@@ -19,7 +19,7 @@ test.sh
 
 log/
 nbhd/
-results/
+results-full/
 networks/hcrnn.py
 networks/linear_interp.py
 dataset/save-loader.py
