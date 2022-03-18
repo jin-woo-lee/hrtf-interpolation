@@ -1,4 +1,4 @@
-# HRTF Dataset Interpolation
+# Global HRTF Interpolation
 
 - This repository provides overall framework for training and evaluating head-related transfer function (HRTF) interpolation systems proposed in ['Global HRTF Interpolation via Learned Affine Transformation of Hyper-conditioned Features'](https://arxiv.org/abs/)
 
