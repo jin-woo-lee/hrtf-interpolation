@@ -71,8 +71,8 @@ def interp(args):
         cons = 'full'
     scale_factor=args.scale_factor
     name = f'FAB_C2F_{cons}_{scale_factor}'
-    src_subj = '/data2/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
-    an_mes = load_dict('/data2/HUTUBS/HRIRs-pos/1.pkl')['label']['L']['feature']
+    src_subj = '/data2/HRTF/FABIAN/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
+    an_mes = load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']['feature']
     num_grid = 11950
     ############################## 
     #name = 'H2F-sim'
@@ -103,23 +103,6 @@ def interp(args):
         z_constraint=args.z_constraint,
         scale_factor=scale_factor,
     )
-    ############################## 
-    #testset = module.JointSet(
-    #    name=name,
-    #    src_path=src_subj,
-    #    tar_path=tar_subj,
-    #    anthropometry=an_mes,
-    #    patch_range=args.p_range,
-    #    n_samples=args.in_ch,
-    #    src_grid = src_grid,
-    #    tar_grid = tar_grid,
-    #    sort_by_dist=True,
-    #    x_constraint=args.x_constraint,
-    #    y_constraint=args.y_constraint,
-    #    z_constraint=args.z_constraint,
-    #    scale_factor=scale_factor,
-    #)
-    ############################## 
     test_loader = DataLoader(testset, batch_size=args.batch_size, shuffle=False)
 
     print("... Test start")
@@ -191,7 +174,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-est.png')
@@ -203,7 +185,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-lin.png')
@@ -215,7 +196,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-tar.png')
@@ -273,6 +253,17 @@ if __name__ == "__main__":
     parser.add_argument('--film_dim', type=str, default='chan')
     parser.add_argument('--scale_factor', type=int, default=1)
     args = parser.parse_args()
+
+    if args.exp_name is None:
+        args.exp_name = '-'.join([
+            f'{args.model}',
+            f'{args.cnn_layers}x{args.rnn_layers}',
+            f'Fi_{args.film_dim}',
+            f'Co_{args.condition}',
+            f'd_{args.p_range}',
+            f'N_{args.in_ch}',
+            f'{args.k_folds}fold{args.test_fold}',
+        ])
 
     args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
     torch.manual_seed(args.seed)

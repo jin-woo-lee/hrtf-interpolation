@@ -116,7 +116,7 @@ class Solver(object):
 
     def set_dataset(self, args):
         module = __import__('dataset.loader', fromlist=[''])
-        data_dir = '/data2/HUTUBS/HRIRs-pos'
+        data_dir = args.data_dir
         tot_subj = 93
         test_subj = (tot_subj // args.k_folds) + 1
         subj_list = np.random.permutation(np.arange(tot_subj))

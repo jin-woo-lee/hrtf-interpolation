@@ -2,10 +2,26 @@ __pycache__/
 
 check_*.py
 loader-v2.py
+analyze_error.py
+anth_pert.py
+interp.py
+recon-fabian.py
+recon.py
+
 cmd
+
+abla.sh
+degree_study.sh
+interp_study.sh
+n_study.sh
+p_study.sh
+test.sh
 
 log/
 nbhd/
 results/
+networks/hcrnn.py
+networks/linear_interp.py
+dataset/save-loader.py
 
 

@@ -68,7 +68,7 @@ def interp(args):
         cons = 'hor'
     else:
         cons = 'full'
-    data_dir = '/data2/HUTUBS/HRIRs-pos'
+    data_dir = '/data2/HRTF/HUTUBS/pkl-15'
     tot_subj = 93
     num_grid = 1730
     #num_grid = 440
@@ -164,7 +164,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-est.png')
@@ -176,7 +175,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-lin.png')
@@ -188,7 +186,6 @@ def interp(args):
         plt.yticks(np.arange(0,22050,4000))
         plt.xlabel(f'{deg_lab} (deg)')
         plt.ylabel('Frequency (Hz)')
-        #plt.yscale('log')
         plt.clim([-20,20])
         plt.colorbar()
         plt.savefig(f'{plot_dir}/{name}/{s}-tar.png')
@@ -243,6 +240,17 @@ if __name__ == "__main__":
     parser.add_argument('--film_dim', type=str, default='chan')
     parser.add_argument('--scale_factor', type=int, default=1)
     args = parser.parse_args()
+
+    if args.exp_name is None:
+        args.exp_name = '-'.join([
+            f'{args.model}',
+            f'{args.cnn_layers}x{args.rnn_layers}',
+            f'Fi_{args.film_dim}',
+            f'Co_{args.condition}',
+            f'd_{args.p_range}',
+            f'N_{args.in_ch}',
+            f'{args.k_folds}fold{args.test_fold}',
+        ])
 
     args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
     torch.manual_seed(args.seed)

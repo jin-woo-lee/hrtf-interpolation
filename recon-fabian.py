@@ -59,9 +59,10 @@ def recon(args):
     print("... Load data")
     module = __import__('dataset.loader', fromlist=[''])
     #test_subj = '/data2/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_measured_HATO_0.sofa'
-    test_subj = '/data2/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
-    an_mes = load_dict('/data2/HUTUBS/HRIRs-pos/1.pkl')['label']['L']['feature']
-    testset = module.SofaSet(
+    test_subj = '/data2/HRTF/FABIAN/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
+    an_mes = load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']
+    #testset = module.SofaSet(
+    testset = module.CoarseSofaSet(
         name='fabian',
         subj_path=test_subj,
         anthropometry=an_mes,
@@ -214,7 +215,7 @@ if __name__ == "__main__":
     parser.add_argument('--in_ch', type=int, default=16)
     parser.add_argument('--out_ch', type=int, default=1)
     parser.add_argument('--cnn_layers', type=int, default=5)
-    parser.add_argument('--rnn_layers', type=int, default=5)
+    parser.add_argument('--rnn_layers', type=int, default=0)
     parser.add_argument('--batch_size', type=int, default=64, help='batch size of inference')
     parser.add_argument('--k_folds', type=int, default=5, help='number of folds for cross-validation')
     parser.add_argument('--test_fold', type=int, default=5, help='k for test')
@@ -225,8 +226,19 @@ if __name__ == "__main__":
     parser.add_argument('--x_constraint', default=None, type=float)
     parser.add_argument('--y_constraint', default=None, type=float)
     parser.add_argument('--z_constraint', default=None, type=float)
-    parser.add_argument('--film_dim', type=str, default='freq')
+    parser.add_argument('--film_dim', type=str, default='chan')
     args = parser.parse_args()
+
+    if args.exp_name is None:
+        args.exp_name = '-'.join([
+            f'{args.model}',
+            f'{args.cnn_layers}x{args.rnn_layers}',
+            f'Fi_{args.film_dim}',
+            f'Co_{args.condition}',
+            f'd_{args.p_range}',
+            f'N_{args.in_ch}',
+            f'{args.k_folds}fold{args.test_fold}',
+        ])
 
     args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
     torch.manual_seed(args.seed)

@@ -99,7 +99,7 @@ def get_position(path, flag='simulated'):
     pos = HRIR.Source.Position.get_values(indices={"M":slice(measure_pts)}, system="cartesian")
     return np.array(pos)
 
-def struct_data(root_dir='/data2/HUTUBS', elevation=0.):
+def struct_data(root_dir='/data2/HRTF/HUTUBS/HUTUBS', elevation=0.):
     # get output label
     am_dir = os.path.join(root_dir, 'Antrhopometric_measures')
     AM = get_antrhopometry_dict(am_dir)
@@ -177,10 +177,9 @@ def struct_data(root_dir='/data2/HUTUBS', elevation=0.):
         DATA.append(dict_)
     return DATA
 
-def prep_hrir(root_dir='/data2/HUTUBS', elevation=0.):
-    print("Load dataset", root_dir)
-    save_dir = os.path.join(root_dir, 'HRIRs-pos')
-    DATA = struct_data(root_dir,elevation)
+def prep_hrir(load_dir='/data2/HRTF/HUTUBS/HUTUBS', save_dir='/data2/HRTF/HUTUBS/pkl-15', elevation=0.):
+    print("Load dataset", load_dir)
+    DATA = struct_data(load_dir,elevation)
     print("Save to", save_dir)
     os.makedirs(save_dir, exist_ok=True)
     for data in DATA:

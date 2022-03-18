@@ -55,17 +55,18 @@ if __name__=='__main__':
     # Network
     #------------------------------ 
     parser.add_argument('--cnn_layers', type=int, default=5)
-    parser.add_argument('--rnn_layers', type=int, default=5)
+    parser.add_argument('--rnn_layers', type=int, default=0)
     parser.add_argument('--in_ch', type=int, default=8)
     parser.add_argument('--out_ch', type=int, default=1)
     parser.add_argument('--condition', type=str, default='hyper')
-    parser.add_argument('--film_dim', type=str, default='freq')
+    parser.add_argument('--film_dim', type=str, default='chan')
     #------------------------------ 
     # Data
     #------------------------------ 
     parser.add_argument('--p_range', default=0.3, type=float, help='patch range')
     parser.add_argument('--rescale', default=50, type=float, help='rescale factor for input')
     parser.add_argument('--seed', default=0, type=int, help='random seed')
+    parser.add_argument('--data_dir', default='/data2/HRTF/HUTUBS/pkl-15', type=str)
 
     args = parser.parse_args()
 

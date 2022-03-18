@@ -57,7 +57,7 @@ def recon(args):
     #============================== 
     print("... Load data")
     module = __import__('dataset.loader', fromlist=[''])
-    data_dir = '/data2/HUTUBS/HRIRs-pos'
+    data_dir = '/data2/HRTF/HUTUBS/pkl-15'
     tot_subj = 93
     test_subj = (tot_subj // args.k_folds) + 1
     subj_list = np.random.permutation(np.arange(tot_subj))
@@ -180,10 +180,10 @@ if __name__ == "__main__":
     parser.add_argument('--in_ch', type=int, default=16)
     parser.add_argument('--out_ch', type=int, default=1)
     parser.add_argument('--cnn_layers', type=int, default=5)
-    parser.add_argument('--rnn_layers', type=int, default=5)
+    parser.add_argument('--rnn_layers', type=int, default=0)
     parser.add_argument('--batch_size', type=int, default=128, help='batch size of inference')
-    parser.add_argument('--k_folds', type=int, default=10, help='number of folds for cross-validation')
-    parser.add_argument('--test_fold', type=int, default=10, help='k for test')
+    parser.add_argument('--k_folds', type=int, default=5, help='number of folds for cross-validation')
+    parser.add_argument('--test_fold', type=int, default=5, help='k for test')
     parser.add_argument('--p_range', default=0.3, type=float, help='patch range')
     parser.add_argument('--rescale', default=50, type=float, help='rescale factor for input')
     parser.add_argument('--condition', type=str, default='hyper')
@@ -191,8 +191,19 @@ if __name__ == "__main__":
     parser.add_argument('--x_constraint', default=None, type=float)
     parser.add_argument('--y_constraint', default=None, type=float)
     parser.add_argument('--z_constraint', default=None, type=float)
-    parser.add_argument('--film_dim', type=str, default='freq')
+    parser.add_argument('--film_dim', type=str, default='chan')
     args = parser.parse_args()
+
+    if args.exp_name is None:
+        args.exp_name = '-'.join([
+            f'{args.model}',
+            f'{args.cnn_layers}x{args.rnn_layers}',
+            f'Fi_{args.film_dim}',
+            f'Co_{args.condition}',
+            f'd_{args.p_range}',
+            f'N_{args.in_ch}',
+            f'{args.k_folds}fold{args.test_fold}',
+        ])
 
     args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
     torch.manual_seed(args.seed)
