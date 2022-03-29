@@ -131,6 +131,15 @@ def interp(args):
         target_m = target_m / args.rescale
         linear_m = linear_m / args.rescale
     
+        if len(scoord.shape) != 3:
+            print(scoord.shape)
+            scoord = scoord.unsqueeze(1)
+        if len(tcoord.shape) != 3:
+            print(tcoord.shape)
+            tcoord = tcoord.unsqueeze(1)
+        if len(an_mes.shape) != 3:
+            print(an_mes.shape)
+            an_mes = an_mes.unsqueeze(1)
         with torch.no_grad():
             estimate, nl = model(inputs_m, scoord, tcoord, an_mes)
         estimate *= args.rescale
@@ -166,9 +175,9 @@ def interp(args):
     rmse_fr_LIN = (LIN - TAR).pow(2).mean(0).mean(-1).pow(.5).detach().cpu().numpy()
     x = np.linspace(0,360,G)
     y = np.linspace(0,22050,129)
-    os.makedirs(f'{plot_dir}/{name}', exist_ok=True)
-    deg_lab = 'Azimuth' if args.z_constraint is not None else 'Elevation'
     if args.save_data:
+        os.makedirs(f'{plot_dir}/{name}', exist_ok=True)
+        deg_lab = 'Azimuth' if args.z_constraint is not None else 'Elevation'
         for s in range(S):
             plt.figure(figsize=(7,13))
             librosa.display.specshow(EST_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
@@ -251,8 +260,8 @@ if __name__ == "__main__":
     parser.add_argument('--z_constraint', default=None, type=float)
     parser.add_argument('--film_dim', type=str, default='chan')
     parser.add_argument('--scale_factor', type=int, default=1)
-    parser.add_argument('--save_data', action="save_true")
-    parser.add_argument('--show_plot', action="save_true")
+    parser.add_argument('--save_data', action="store_true")
+    parser.add_argument('--show_plot', action="store_true")
     parser.add_argument('--source', type=str, default=None)
     parser.add_argument('--measures', nargs='+', default=None)
     args = parser.parse_args()
