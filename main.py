@@ -9,24 +9,16 @@ import torch
 import numpy as np
 
 if __name__=='__main__':
-    def str2bool(v):
-        if v.lower() in ('yes', 'true', 't', 'y', '1'):
-            return True
-        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-            return False
-        else:
-            raise argparse.ArgumentTypeError('Boolean value expected.')
-
     parser = argparse.ArgumentParser()
     #------------------------------ 
     # General
     #------------------------------ 
-    parser.add_argument('--train', type=str2bool, default='false')
-    parser.add_argument('--test', type=str2bool, default='false')
-    parser.add_argument('--resume', type=str2bool, default='false')
+    parser.add_argument('--train', action="store_true")
+    parser.add_argument('--test', action="store_true")
+    parser.add_argument('--resume', action="store_true")
     parser.add_argument('--plot_iter', type=int, default=500)
-    parser.add_argument('--plot_train', default='false', type=str2bool, help='plot train samples')
-    parser.add_argument('--plot_test', default='false', type=str2bool, help='plot test samples')
+    parser.add_argument('--plot_train', action="store_true", help='plot train samples')
+    parser.add_argument('--plot_test',  action="store_true", help='plot test samples')
     parser.add_argument('--board_iter', type=int, default=500)
     parser.add_argument('--save_iter', type=int, default=2000)
     parser.add_argument('--load_epoch', type=int, default=0)
