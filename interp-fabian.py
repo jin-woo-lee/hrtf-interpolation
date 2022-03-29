@@ -131,10 +131,6 @@ def interp(args):
         target_m = target_m / args.rescale
         linear_m = linear_m / args.rescale
     
-        print("inputs", inputs_m.shape)
-        print("scoord", scoord.shape)
-        print("tcoord", tcoord.shape)
-        print("an_mes", an_mes.shape)
         with torch.no_grad():
             estimate, nl = model(inputs_m, scoord, tcoord, an_mes)
         estimate *= args.rescale
