@@ -131,15 +131,6 @@ def interp(args):
         target_m = target_m / args.rescale
         linear_m = linear_m / args.rescale
     
-        if len(scoord.shape) != 3:
-            print(scoord.shape)
-            scoord = scoord.unsqueeze(1)
-        if len(tcoord.shape) != 3:
-            print(tcoord.shape)
-            tcoord = tcoord.unsqueeze(1)
-        if len(an_mes.shape) != 3:
-            print(an_mes.shape)
-            an_mes = an_mes.unsqueeze(1)
         with torch.no_grad():
             estimate, nl = model(inputs_m, scoord, tcoord, an_mes)
         estimate *= args.rescale
