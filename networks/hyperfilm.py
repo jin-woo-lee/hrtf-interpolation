@@ -73,15 +73,15 @@ class HyperFiLM(nn.Module):
                 p_s[:,:,0::3] = p_s[:,:,0::3] - p_t[:,:,0::3]
                 p_s[:,:,1::3] = p_s[:,:,1::3] - p_t[:,:,1::3]
                 p_s[:,:,2::3] = p_s[:,:,2::3] - p_t[:,:,2::3]
-                z = self.pos_enc(p_s, lens)
-                a = self.pos_enc(torch.cat((p_t, a),dim=-1), lens)
+                z = self.sin_enc(p_s, lens)
+                a = self.sin_enc(torch.cat((p_t, a),dim=-1), lens)
                 z = self.cond(z, a)
             elif self.condition=='film':
-                z = self.pos_enc(torch.cat((p_s,p_t),dim=-1), lens)
+                z = self.sin_enc(torch.cat((p_s,p_t),dim=-1), lens)
                 for n in range(self.cond_layers):
                     z = self.cond[n](z, a)
             elif self.condition=='none':
-                z = self.pos_enc(torch.cat((p_s,p_t,a),dim=-1), lens)
+                z = self.sin_enc(torch.cat((p_s,p_t,a),dim=-1), lens)
                 z = self.cond(z)
 
         o = self.linear(x)
@@ -94,12 +94,12 @@ class HyperFiLM(nn.Module):
             x = 0
         return o + x, x
 
-    def pos_enc(self, pos, lens=64, eps=1e-5):
-        pos = pos.permute(0,2,1)    # (B, C, 1)
-        pos = pos.repeat(1,1,lens)
-        w = 2**((torch.ones_like(pos).cumsum(-1)-1) / lens)
-        pos[:,:,0::2] = torch.sin(w[:,:,0::2]*np.pi*pos[:,:,0::2])
-        pos[:,:,1::2] = torch.cos(w[:,:,1::2]*np.pi*pos[:,:,1::2])
-        return pos
+    def sin_enc(self, encs, lens=64, eps=1e-5):
+        encs = encs.permute(0,2,1)    # (B, C, 1)
+        encs = encs.repeat(1,1,lens)
+        w = 2**((torch.ones_like(encs).cumsum(-1)-1) / lens)
+        encs[:,:,0::2] = torch.sin(w[:,:,0::2]*np.pi*encs[:,:,0::2])
+        encs[:,:,1::2] = torch.cos(w[:,:,1::2]*np.pi*encs[:,:,1::2])
+        return encs
 
 

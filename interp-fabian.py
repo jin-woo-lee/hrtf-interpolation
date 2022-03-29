@@ -48,12 +48,13 @@ def interp(args):
     load_state(args, model)
     
     file_name = f'{args.k_folds}_fold-{args.test_fold}'
-    save_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}'
-    plot_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/plot'
-    errr_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/error'
-    log_path = f'{save_dir}/{file_name}.txt'
-    os.makedirs(plot_dir, exist_ok=True)
-    os.makedirs(errr_dir, exist_ok=True)
+    if args.save_data:
+        save_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}'
+        plot_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/plot'
+        errr_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/error'
+        log_path = f'{save_dir}/{file_name}.txt'
+        os.makedirs(plot_dir, exist_ok=True)
+        os.makedirs(errr_dir, exist_ok=True)
     
     #============================== 
     # Load Data
@@ -167,66 +168,64 @@ def interp(args):
     y = np.linspace(0,22050,129)
     os.makedirs(f'{plot_dir}/{name}', exist_ok=True)
     deg_lab = 'Azimuth' if args.z_constraint is not None else 'Elevation'
-    for s in range(S):
-        plt.figure(figsize=(7,13))
-        librosa.display.specshow(EST_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
-        plt.xticks(np.arange(0,361,60))
-        plt.yticks(np.arange(0,22050,4000))
-        plt.xlabel(f'{deg_lab} (deg)')
-        plt.ylabel('Frequency (Hz)')
-        plt.clim([-20,20])
-        plt.colorbar()
-        plt.savefig(f'{plot_dir}/{name}/{s}-est.png')
-        plt.close()
+    if args.save_data:
+        for s in range(S):
+            plt.figure(figsize=(7,13))
+            librosa.display.specshow(EST_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
+            plt.xticks(np.arange(0,361,60))
+            plt.yticks(np.arange(0,22050,4000))
+            plt.xlabel(f'{deg_lab} (deg)')
+            plt.ylabel('Frequency (Hz)')
+            plt.clim([-20,20])
+            plt.colorbar()
+            plt.savefig(f'{plot_dir}/{name}/{s}-est.png')
+            plt.close()
 
-        plt.figure(figsize=(7,13))
-        librosa.display.specshow(LIN_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
-        plt.xticks(np.arange(0,361,60))
-        plt.yticks(np.arange(0,22050,4000))
-        plt.xlabel(f'{deg_lab} (deg)')
-        plt.ylabel('Frequency (Hz)')
-        plt.clim([-20,20])
-        plt.colorbar()
-        plt.savefig(f'{plot_dir}/{name}/{s}-lin.png')
-        plt.close()
+            plt.figure(figsize=(7,13))
+            librosa.display.specshow(LIN_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
+            plt.xticks(np.arange(0,361,60))
+            plt.yticks(np.arange(0,22050,4000))
+            plt.xlabel(f'{deg_lab} (deg)')
+            plt.ylabel('Frequency (Hz)')
+            plt.clim([-20,20])
+            plt.colorbar()
+            plt.savefig(f'{plot_dir}/{name}/{s}-lin.png')
+            plt.close()
 
-        plt.figure(figsize=(7,13))
-        librosa.display.specshow(TAR_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
-        plt.xticks(np.arange(0,361,60))
-        plt.yticks(np.arange(0,22050,4000))
-        plt.xlabel(f'{deg_lab} (deg)')
-        plt.ylabel('Frequency (Hz)')
-        plt.clim([-20,20])
-        plt.colorbar()
-        plt.savefig(f'{plot_dir}/{name}/{s}-tar.png')
-        plt.close()
+            plt.figure(figsize=(7,13))
+            librosa.display.specshow(TAR_np[s].T, x_coords=x, y_coords=y, cmap='bwr')
+            plt.xticks(np.arange(0,361,60))
+            plt.yticks(np.arange(0,22050,4000))
+            plt.xlabel(f'{deg_lab} (deg)')
+            plt.ylabel('Frequency (Hz)')
+            plt.clim([-20,20])
+            plt.colorbar()
+            plt.savefig(f'{plot_dir}/{name}/{s}-tar.png')
+            plt.close()
 
-    with open(log_path,'a') as log:
-        log.write(f"[Test] Model RMSE  : {sum(rmse_EST)/len(rmse_EST)} dB\n")
-        log.write(f"       Linear RMSE : {sum(rmse_LIN)/len(rmse_LIN)} dB\n")
-        log.write(f"       Model SD    : {sum(sd_EST)/len(sd_EST)} dB\n")
-        log.write(f"       Linear SD   : {sum(sd_LIN)/len(sd_LIN)} dB\n")
+    if args.save_data:
+        with open(log_path,'a') as log:
+            log.write(f"[Test] Model RMSE  : {sum(rmse_EST)/len(rmse_EST)} dB\n")
+            log.write(f"       Linear RMSE : {sum(rmse_LIN)/len(rmse_LIN)} dB\n")
+            log.write(f"       Model SD    : {sum(sd_EST)/len(sd_EST)} dB\n")
+            log.write(f"       Linear SD   : {sum(sd_LIN)/len(sd_LIN)} dB\n")
     print(f"[Test] Model RMSE  : {sum(rmse_EST)/len(rmse_EST)} dB")
     print(f"       Linear RMSE : {sum(rmse_LIN)/len(rmse_LIN)} dB")
     print(f"       Model SD    : {sum(sd_EST)/len(sd_EST)} dB")
     print(f"       Linear SD   : {sum(sd_LIN)/len(sd_LIN)} dB")
-    np.save(f'{errr_dir}/{name}-est.npy', EST_np)
-    np.save(f'{errr_dir}/{name}-lin.npy', LIN_np)
-    np.save(f'{errr_dir}/{name}-tar.npy', TAR_np)
-    np.save(f'{errr_dir}/{name}-est-sd.npy', sd_fr_EST)
-    np.save(f'{errr_dir}/{name}-lin-sd.npy', sd_fr_LIN)
-    np.save(f'{errr_dir}/{name}-est-rmse.npy', rmse_fr_EST)
-    np.save(f'{errr_dir}/{name}-lin-rmse.npy', rmse_fr_LIN)
+    if args.save_data:
+        np.save(f'{errr_dir}/{name}-est.npy', EST_np)
+        np.save(f'{errr_dir}/{name}-lin.npy', LIN_np)
+        np.save(f'{errr_dir}/{name}-tar.npy', TAR_np)
+        np.save(f'{errr_dir}/{name}-est-sd.npy', sd_fr_EST)
+        np.save(f'{errr_dir}/{name}-lin-sd.npy', sd_fr_LIN)
+        np.save(f'{errr_dir}/{name}-est-rmse.npy', rmse_fr_EST)
+        np.save(f'{errr_dir}/{name}-lin-rmse.npy', rmse_fr_LIN)
+
+    return TAR_np[0], EST_np[0]
 
 if __name__ == "__main__":
 
-    def str2bool(v):
-        if v.lower() in ('yes', 'true', 't', 'y', '1'):
-            return True
-        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-            return False
-        else:
-            raise argparse.ArgumentTypeError('Boolean value expected.')
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--gpu', default=0, type=int)
@@ -252,6 +251,8 @@ if __name__ == "__main__":
     parser.add_argument('--z_constraint', default=None, type=float)
     parser.add_argument('--film_dim', type=str, default='chan')
     parser.add_argument('--scale_factor', type=int, default=1)
+    parser.add_argument('--save_data', action="save_true")
+    parser.add_argument('--show_plot', action="save_true")
     args = parser.parse_args()
 
     if args.exp_name is None:
@@ -265,7 +266,8 @@ if __name__ == "__main__":
             f'{args.k_folds}fold{args.test_fold}',
         ])
 
-    args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
+    if args.ckpt is None:
+        args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     interp(args)

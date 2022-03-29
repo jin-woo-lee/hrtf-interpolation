@@ -73,7 +73,7 @@ def rms_normalize(wav, ref_dB=-23.0):
     wav = gain * wav
     return wav
 
-def pos_enc(lens,coord):
+def sin_enc(lens,coord):
     pos = np.arange(lens) / lens
 
     elevation = np.arcsin(coord[2]/1.47)
