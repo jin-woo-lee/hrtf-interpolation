@@ -73,7 +73,7 @@ def interp(args):
     scale_factor=args.scale_factor
     name = f'FAB_C2F_{cons}_{scale_factor}'
     src_subj = args.source if args.source else '/data2/HRTF/FABIAN/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
-    an_mes = [float(m) for m in args.measures[0].split(',')] if args.measures else load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']['feature']
+    an_mes = args.measures if args.measures else load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']['feature']
     num_grid = 11950
     ############################## 
     #name = 'H2F-sim'
@@ -274,6 +274,8 @@ if __name__ == "__main__":
 
     if args.ckpt is None:
         args.ckpt = f'results/{args.exp_name}/train/ckpt/{args.epoch}/{args.model}_{args.step}.pt'
+    if args.measures:
+        args.measures = [float(m) for m in args.measures[0].split(',')]
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     interp(args)

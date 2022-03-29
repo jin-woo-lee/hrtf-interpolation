@@ -74,10 +74,7 @@ class HyperFiLM(nn.Module):
                 p_s[:,:,1::3] = p_s[:,:,1::3] - p_t[:,:,1::3]
                 p_s[:,:,2::3] = p_s[:,:,2::3] - p_t[:,:,2::3]
                 z = self.sin_enc(p_s, lens)
-                print(p_t.shape)
-                print(a.shape)
                 a = self.sin_enc(torch.cat((p_t, a),dim=-1), lens)
-                print("...",a.shape)
                 z = self.cond(z, a)
             elif self.condition=='film':
                 z = self.sin_enc(torch.cat((p_s,p_t),dim=-1), lens)
