@@ -47,8 +47,8 @@ def interp(args):
     model = model.cuda(args.gpu)
     load_state(args, model)
     
-    file_name = f'{args.k_folds}_fold-{args.test_fold}'
     if args.save_data:
+        file_name = f'{args.k_folds}_fold-{args.test_fold}'
         save_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}'
         plot_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/plot'
         errr_dir = f'results/{args.exp_name}/test/fabian-interp/{args.epoch}/error'
@@ -72,8 +72,8 @@ def interp(args):
         cons = 'full'
     scale_factor=args.scale_factor
     name = f'FAB_C2F_{cons}_{scale_factor}'
-    src_subj = '/data2/HRTF/FABIAN/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
-    an_mes = load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']['feature']
+    src_subj = args.source if args.source else '/data2/HRTF/FABIAN/FABIAN_HRTF_DATABASE_V1/1 HRIRs/SOFA/FABIAN_HRIR_modeled_HATO_0.sofa'
+    an_mes = [float(m) for m in args.measures[0].split(',')] if args.measures else load_dict('/data2/HRTF/HUTUBS/pkl-15/1.pkl')['label']['L']['feature']
     num_grid = 11950
     ############################## 
     #name = 'H2F-sim'
@@ -253,6 +253,8 @@ if __name__ == "__main__":
     parser.add_argument('--scale_factor', type=int, default=1)
     parser.add_argument('--save_data', action="save_true")
     parser.add_argument('--show_plot', action="save_true")
+    parser.add_argument('--source', type=str, default=None)
+    parser.add_argument('--measures', nargs='+', default=None)
     args = parser.parse_args()
 
     if args.exp_name is None:
