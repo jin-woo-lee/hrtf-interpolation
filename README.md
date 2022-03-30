@@ -5,7 +5,7 @@
 
 ### Prepare dataset
 
-Prepare HUTUBS dataset. This process will re-arrange the original Sofa files, and save them in `.pkl` format. Set default arguments for `load_dir` and `save_dir` of `prep_hrir` in `dataset/preprocess.py` by "path to your HUTUBS dataset" (which contains `HRIRs` and `Antrhopometric_measures` directory) and "path to the save directory", respectively.
+This process will re-arrange the original Sofa files, and save them in `.pkl` format. Set default arguments for `load_dir` and `save_dir` of `prep_hrir` in `dataset/preprocess.py` by "path to your HUTUBS dataset" (which contains `HRIRs` and `Antrhopometric_measures` directory) and "path to the save directory", respectively.
 
 ```bash
 python3 dataset/preprocess.py
@@ -13,7 +13,7 @@ python3 dataset/preprocess.py
 
 ### Interpolation
 
-Reconstruction test for HUTUBS. This will reproduce the results of Table 2. Note that Table 2 of the paper shows the RMSE averaged for five test folds.
+Reconstruction test using HUTUBS. This will reproduce the results of Table 2. Note that Table 2 of the paper shows the RMSE averaged for five test folds.
 
 ```bash
 python3 interp-hutubs.py --gpu 0 --test_fold 3                   # Table 2, 'All'
@@ -22,7 +22,7 @@ python3 interp-hutubs.py --gpu 0 --test_fold 3 --y_constraint 0  # Table 2, 'Med
 python3 interp-hutubs.py --gpu 0 --test_fold 3 --z_constraint 0  # Table 2, 'Hor'
 ```
 
-Interpolation test for FABIAN. This will reproduce the results of Table 3. Note that Table 3 of the paper shows the RMSE averaged for five test folds.
+Interpolation test using FABIAN. This will reproduce the results of Table 3. Note that Table 3 of the paper shows the RMSE averaged for five test folds.
 
 ```bash
 python3 interp-fabian.py --gpu 0 --test_fold 5                   # Table 3, Ours, 'All'
@@ -32,7 +32,7 @@ python3 interp-fabian.py --gpu 0 --test_fold 5 --scale_factor 6  # Table 3, Ours
 
 ### Super-resolution
 
-To reproduce the results of Figure 4, please see our ['super-resolution tutorial'](https://github.com/jin-woo-lee/hrtf-interpolation/blob/main/tutorial/FABIAN_super_resolution.ipynb) that we've prepared in Colab notebook.
+To reproduce the results of Figure 4, please see our [super-resolution tutorial](https://github.com/jin-woo-lee/hrtf-interpolation/blob/main/tutorial/FABIAN_super_resolution.ipynb) Colab notebook.
 
 ### Train
 
