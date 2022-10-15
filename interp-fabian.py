@@ -152,7 +152,7 @@ def interp(args, return_phs=False):
     EST = torch.cat(EST, dim=0).reshape(S,G,129)
     TAR = torch.cat(TAR, dim=0).reshape(S,G,129)
     LIN = torch.cat(LIN, dim=0).reshape(S,G,129)
-    PHS = torch.cat(PHS, dim=0).reshape(S,G,129)
+    PHS = torch.cat(PHS, dim=0).reshape(S,G,129,2)
 
     EST_np = EST.detach().cpu().numpy()
     TAR_np = TAR.detach().cpu().numpy()
