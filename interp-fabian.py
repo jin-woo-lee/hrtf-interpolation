@@ -25,7 +25,7 @@ def load_state(args, model):
     args.test_fold = checkpoint["test_fold"]
     print(f"...\t {args.test_fold}-th fold of {args.k_folds}-fold cross-validation")
 
-def interp(args):
+def interp(args, return_phs=False):
     print("="*30)
     print("    Interpolation Test: FABIAN")
     print("="*30)
@@ -107,13 +107,9 @@ def interp(args):
     test_loader = DataLoader(testset, batch_size=args.batch_size, shuffle=False)
 
     print("... Test start")
-    sd_EST = []
-    sd_LIN = []
-    rmse_EST = []
-    rmse_LIN = []
-    EST = []
-    TAR = []
-    LIN = []
+    sd_EST = [];   sd_LIN = []
+    rmse_EST = []; rmse_LIN = []
+    EST = []; TAR = []; LIN = []; PHS = []
     model.eval()
     for i, ts in enumerate(tqdm(test_loader)):
         input, target, linear, an_mes, scoord, tcoord = ts
@@ -149,16 +145,19 @@ def interp(args):
             EST.append(estimate[b])
             TAR.append(target_m[b])
             LIN.append(linear_m[b])
+            PHS.append(target_p[b])
     S = 1
     G = testset.tar_sel_grid
     R = scale_factor
     EST = torch.cat(EST, dim=0).reshape(S,G,129)
     TAR = torch.cat(TAR, dim=0).reshape(S,G,129)
     LIN = torch.cat(LIN, dim=0).reshape(S,G,129)
+    PHS = torch.cat(PHS, dim=0).reshape(S,G,129)
 
     EST_np = EST.detach().cpu().numpy()
     TAR_np = TAR.detach().cpu().numpy()
     LIN_np = LIN.detach().cpu().numpy()
+    PHS_np = PHS.detach().cpu().numpy()
 
     sd_fr_EST = (EST - TAR).abs().mean(0).mean(-1).detach().cpu().numpy()
     sd_fr_LIN = (LIN - TAR).abs().mean(0).mean(-1).detach().cpu().numpy()
@@ -222,7 +221,10 @@ def interp(args):
         np.save(f'{errr_dir}/{name}-est-rmse.npy', rmse_fr_EST)
         np.save(f'{errr_dir}/{name}-lin-rmse.npy', rmse_fr_LIN)
 
-    return TAR_np[0], EST_np[0]
+    if return_phs:
+        return TAR_np[0], EST_np[0], PHS_np[0]
+    else:
+        return TAR_np[0], EST_np[0]
 
 if __name__ == "__main__":
 
