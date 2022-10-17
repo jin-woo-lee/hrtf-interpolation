@@ -41,6 +41,7 @@ class GenericDataset(torch.utils.data.Dataset):
             self.nbhd = load_dict(f"nbhd/nbhd-{patch_range}.pkl")
             print(f"... loaded nbhd dict of range {patch_range}")
         else:
+            os.makedirs("nbhd", exist_ok=True)
             self.prep_nbhd()
             save_dict(self.nbhd,f"nbhd/nbhd-{patch_range}.pkl")
         self.data = {}

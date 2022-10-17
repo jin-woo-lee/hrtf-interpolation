@@ -7,7 +7,6 @@ from solver import Solver
 import torch.multiprocessing as mp
 import torch.distributed as dist
 import logging
-from torch.utils.tensorboard import SummaryWriter
 
 def train(args):
     solver = Solver(args)
@@ -31,11 +30,7 @@ def worker(gpu, solver, ngpus_per_node, args):
     args.ngpus_per_node = ngpus_per_node
     solver.set_dataset(args)
     solver.set_gpu(args)
-    if args.gpu==0:
-        logger = SummaryWriter(log_dir='results/tensorboard/{}'.format(args.exp_name))
-    else:
-        logger = None
-    solver.train(args, logger)
+    solver.train(args)
     logging.info('train finished')
 
 

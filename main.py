@@ -58,7 +58,7 @@ if __name__=='__main__':
     parser.add_argument('--p_range', default=0.3, type=float, help='patch range')
     parser.add_argument('--rescale', default=50, type=float, help='rescale factor for input')
     parser.add_argument('--seed', default=0, type=int, help='random seed')
-    parser.add_argument('--data_dir', default='/data2/HRTF/HUTUBS/pkl-15', type=str)
+    parser.add_argument('--data_dir', default='/ssd/data/HUTUBS/pkl-15', type=str)
 
     args = parser.parse_args()
 

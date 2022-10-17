@@ -168,17 +168,7 @@ class Solver(object):
         torch.save(checkpoint_state, checkpoint_path)
         print("Saved checkpoint: {}".format(checkpoint_path))
 
-    def summary(self, mode, exp_name, logger, loss, plots):
-        logger.add_figure(f'{mode} HRIR, HRTF', plots, self.step)
-        if loss != None:
-            tot_loss = loss['total']
-            log_path = f'results/{exp_name}/{mode}/loss.txt'
-            with open(log_path, 'a') as f:
-                f.write(f"{self.step}\t{tot_loss}\n")
-            logger.add_scalar(f'Total {mode} loss', tot_loss, self.step)
-            logger.add_scalars(f'{mode} loss', loss, self.step)
-
-    def train(self, args, logger):
+    def train(self, args):
     
         self.model.train()
     
@@ -247,21 +237,18 @@ class Solver(object):
                             f"total loss {tot_loss:.3f} | valid error {valid_error:.3f},\t"
                         )
     
-                    if i % args.board_iter == 0 and args.plot_train:
-                        self.summary('train', args.exp_name, logger, self.total_train_loss, plots)
-    
             LOSS.append(sum(loss_epoch) / len(self.train_loader))
             # end of each epoch
             if len(LOSS) > 2 and round(LOSS[-2],5) >= round(LOSS[-3],5) and round(LOSS[-1],5) >= round(LOSS[-2],5):
                 self.scheduler.step()
             if epoch % args.valid_epoch == 0 and epoch != 0:
-                valid_error = self.test(args, logger, 'valid')
+                valid_error = self.test(args, 'valid')
                 self.model.train()
         # end of training
         checkpoint_dir = f'{root_dir}/ckpt/{epoch}'
         self.save_checkpoint(args, epoch, i, checkpoint_dir)
     
-    def test(self, args, logger=None, mode='test'):
+    def test(self, args, mode='test'):
 
         self.model.eval()
         #logging.info('test start')
@@ -352,27 +339,24 @@ class Solver(object):
             f'          Total RMSE: {total_er_db}',
         ]))
         if args.gpu==0:
-            if mode=='valid' and args.plot_test and logger is not None:
-                self.summary('valid', args.exp_name, logger, self.total_valid_loss, plots)
-            else:
-                print('test finish')
-                file_name = f'{args.k_folds}_fold-{args.test_fold}'
-                log_path = f'{root_dir}/{file_name}.txt'
-                with open(log_path, 'w') as f:
-                    for ll in LOG:
-                        lls = ll.split('\n')
-                        for l in lls:
-                            f.write(l)
-                            f.write('\n')
-                freqs_error = freqs_error.detach().cpu().numpy()
-                horis_error = horis_error.detach().cpu().numpy()
-                medis_error = medis_error.detach().cpu().numpy()
-                frons_error = frons_error.detach().cpu().numpy()
-                np.save(f'{root_dir}/freqs_error.npy', freqs_error)
-                np.save(f'{root_dir}/horis_error.npy', horis_error)
-                np.save(f'{root_dir}/medis_error.npy', medis_error)
-                np.save(f'{root_dir}/frons_error.npy', frons_error)
-                print('saved accuracy log:', log_path)
+            print('test finish')
+            file_name = f'{args.k_folds}_fold-{args.test_fold}'
+            log_path = f'{root_dir}/{file_name}.txt'
+            with open(log_path, 'w') as f:
+                for ll in LOG:
+                    lls = ll.split('\n')
+                    for l in lls:
+                        f.write(l)
+                        f.write('\n')
+            freqs_error = freqs_error.detach().cpu().numpy()
+            horis_error = horis_error.detach().cpu().numpy()
+            medis_error = medis_error.detach().cpu().numpy()
+            frons_error = frons_error.detach().cpu().numpy()
+            np.save(f'{root_dir}/freqs_error.npy', freqs_error)
+            np.save(f'{root_dir}/horis_error.npy', horis_error)
+            np.save(f'{root_dir}/medis_error.npy', medis_error)
+            np.save(f'{root_dir}/frons_error.npy', frons_error)
+            print('saved accuracy log:', log_path)
             print(f'[Summary] {args.exp_name}: {args.k_folds}_fold-{args.test_fold}-{epoch}')
             print(f'          Total RMSE: {total_er_db}')
         return total_error
