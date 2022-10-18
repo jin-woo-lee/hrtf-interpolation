@@ -71,6 +71,7 @@ class Solver(object):
                 batch_size=args.batch_size,
                 condition=args.condition,
                 film_dim=args.film_dim,
+                without_anm=args.without_anm,
             )
         ############################### 
     

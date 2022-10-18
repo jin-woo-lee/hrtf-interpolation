@@ -1,6 +1,7 @@
 # Global HRTF Interpolation
 
 - This repository provides overall framework for training and evaluating head-related transfer function (HRTF) interpolation systems proposed in ['Global HRTF Interpolation via Learned Affine Transformation of Hyper-conditioned Features'](https://arxiv.org/abs/2204.02637)
+- Demo sound samples are available in ['here'](https://bit.ly/3DdmPu9)
 
 
 ### Prepare dataset

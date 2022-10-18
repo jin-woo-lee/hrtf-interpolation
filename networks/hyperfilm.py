@@ -12,14 +12,17 @@ class HyperFiLM(nn.Module):
             batch_size,
             condition,
             film_dim,
+            without_anm,
         ):
         super().__init__()
         self.condition = condition
+        self.without_anm = without_anm
         if cnn_layers > 0:
             if condition=='hyper':
                 con_ch = 3*in_ch
+                con_dim = 3 if without_anm else 15
                 self.cond = HyperConv(
-                    input_size=15,
+                    input_size=con_dim,
                     in_ch=con_ch,
                     out_ch=1,
                     kernel_size=1,
@@ -39,7 +42,7 @@ class HyperFiLM(nn.Module):
                     ))
                 self.cond = nn.ModuleList(_cond)
             elif condition=='none':
-                self.cond = nn.Conv1d(15+3*in_ch,1,1,stride=1,padding=0)
+                self.cond = nn.Conv1d(con_dim+3*in_ch,1,1,stride=1,padding=0)
 
         _cnn = []
         self.cnn_layers = cnn_layers
@@ -74,7 +77,10 @@ class HyperFiLM(nn.Module):
                 p_s[:,:,1::3] = p_s[:,:,1::3] - p_t[:,:,1::3]
                 p_s[:,:,2::3] = p_s[:,:,2::3] - p_t[:,:,2::3]
                 z = self.sin_enc(p_s, lens)
-                a = self.sin_enc(torch.cat((p_t, a),dim=-1), lens)
+                if self.without_anm:
+                    a = self.sin_enc(p_t, lens)                         # (b,  3, lens)
+                else:
+                    a = self.sin_enc(torch.cat((p_t, a),dim=-1), lens)  # (b, 15, lens)
                 z = self.cond(z, a)
             elif self.condition=='film':
                 z = self.sin_enc(torch.cat((p_s,p_t),dim=-1), lens)

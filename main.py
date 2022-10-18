@@ -52,6 +52,7 @@ if __name__=='__main__':
     parser.add_argument('--out_ch', type=int, default=1)
     parser.add_argument('--condition', type=str, default='hyper')
     parser.add_argument('--film_dim', type=str, default='chan')
+    parser.add_argument('--without_anm', action='store_true')
     #------------------------------ 
     # Data
     #------------------------------ 

@@ -43,6 +43,7 @@ def interp(args):
         batch_size=args.batch_size,
         condition=args.condition,
         film_dim=args.film_dim,
+        without_anm=True,
     )
     model = model.cuda(args.gpu)
     load_state(args, model)
@@ -68,7 +69,7 @@ def interp(args):
         cons = 'hor'
     else:
         cons = 'full'
-    data_dir = '/data2/HRTF/HUTUBS/pkl-15'
+    data_dir = '/ssd/data/HUTUBS/pkl-15'
     tot_subj = 93
     num_grid = 1730
     #num_grid = 440
