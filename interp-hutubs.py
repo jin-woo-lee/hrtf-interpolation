@@ -43,7 +43,7 @@ def interp(args):
         batch_size=args.batch_size,
         condition=args.condition,
         film_dim=args.film_dim,
-        without_anm=True,
+        without_anm=False,
     )
     model = model.cuda(args.gpu)
     load_state(args, model)
