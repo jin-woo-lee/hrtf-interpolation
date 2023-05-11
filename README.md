@@ -42,3 +42,20 @@ Training procedures can be found under `results` directory. Specify the path to 
 ```bash
 python3 main.py --gpus 0,1 --train --cnn_layers 5 --condition hyper --in_ch 16 --p_range 0.2 --test_fold 5 --data_dir $path_to_data_dir
 ```
+
+### Citation
+
+If you find our work helpful, please cite it as below.
+
+```bib
+@inproceedings{lee2023global,
+  title={Global hrtf interpolation via learned affine transformation of hyper-conditioned features},
+  author={Lee, Jin Woo and Lee, Sungho and Lee, Kyogu},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2023},
+  organization={IEEE}
+}
+```
+
+
